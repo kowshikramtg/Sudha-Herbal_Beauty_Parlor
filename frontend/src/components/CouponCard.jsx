@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 function CouponCard({ offer, myCoupon, onPurchase }) {
   return (
     <div className="coupon-card">
       <div className="coupon-header">
-        <h2>🎁 Special Offer!</h2>
+        <h2>Special Offer!</h2>
       </div>
 
       {!myCoupon ? (
@@ -12,15 +12,19 @@ function CouponCard({ offer, myCoupon, onPurchase }) {
         <div className="coupon-content">
           <div className="coupon-value">
             <span className="currency">₹</span>
-            <span className="amount">{offer.value}</span>
+            <span className="amount">{offer.price}</span>
           </div>
-          
+
           <div className="coupon-details">
-            <h3>Exclusive Facial Package</h3>
+            <h3>{offer.title}</h3>
             <ul>
-              <li>✅ Get <strong>{offer.facials} Premium Facials</strong></li>
-              <li>✅ Valid until <strong>{new Date(offer.validUntil).toLocaleDateString()}</strong></li>
-              <li>✅ Choose any facial service</li>
+              <li>
+                ✅ Get <strong>{offer.totalFacials} Premium Facials</strong>
+              </li>
+              {offer.features &&
+                offer.features.map((feature, index) => (
+                  <li key={index}>✅ {feature}</li>
+                ))}
               <li>✅ No hidden charges</li>
             </ul>
           </div>
@@ -33,26 +37,26 @@ function CouponCard({ offer, myCoupon, onPurchase }) {
             Purchase Now
           </button>
 
-          <div className="coupon-badge">
-            Limited Time Offer! 🔥
-          </div>
+          <div className="coupon-badge">Limited Time Offer!!</div>
         </div>
       ) : (
         // Show coupon status if already purchased
         <div className="coupon-status">
           <h3>Your Active Coupon</h3>
-          
+
           <div className="status-details">
             <div className="status-item">
               <span className="label">Value:</span>
-              <span className="value">₹{myCoupon.couponValue}</span>
+              <span className="value">₹{myCoupon.price}</span>
             </div>
-            
+
             <div className="status-item">
               <span className="label">Facials Used:</span>
-              <span className="value">{myCoupon.facialsUsed} / {myCoupon.totalFacials}</span>
+              <span className="value">
+                {myCoupon.facialsUsed} / {myCoupon.totalFacials}
+              </span>
             </div>
-            
+
             <div className="status-item">
               <span className="label">Valid Until:</span>
               <span className="value">
@@ -62,17 +66,23 @@ function CouponCard({ offer, myCoupon, onPurchase }) {
           </div>
 
           <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ 
-                width: `${(myCoupon.facialsUsed / myCoupon.totalFacials) * 100}%` 
+            <div
+              className="progress-fill"
+              style={{
+                width: `${
+                  (myCoupon.facialsUsed / myCoupon.totalFacials) * 100
+                }%`,
               }}
             ></div>
           </div>
 
           {myCoupon.facialsUsed < myCoupon.totalFacials ? (
             <p className="status-message">
-              You have <strong>{myCoupon.totalFacials - myCoupon.facialsUsed}</strong> facial(s) remaining!
+              You have{" "}
+              <strong>{myCoupon.totalFacials - myCoupon.facialsUsed}</strong>{" "}
+              facial
+              {myCoupon.totalFacials - myCoupon.facialsUsed > 1 ? "s" : ""}{" "}
+              remaining!
             </p>
           ) : (
             <p className="status-message completed">

@@ -270,3 +270,10 @@ Built with:
 ---
 
 **Happy Coding! 💖**
+
+
+
+
+**probelm faced**
+- change in the database name in .env file, therefore it created another database named by it and store null values, ~> so check the database name once before using in the .env file.
+- 

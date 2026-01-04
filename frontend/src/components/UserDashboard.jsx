@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import CouponCard from './CouponCard.jsx';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import CouponCard from "./CouponCard.jsx";
 
 function UserDashboard({ user, onLogout }) {
   const [advertisements, setAdvertisements] = useState([]);
-  const [couponOffer, setCouponOffer] = useState(null);
-  const [myCoupon, setMyCoupon] = useState(null);
+  const [couponOffers, setCouponOffers] = useState([]);
+  const [myCoupons, setMyCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch data on component mount
@@ -16,38 +16,41 @@ function UserDashboard({ user, onLogout }) {
   const fetchData = async () => {
     try {
       // Fetch advertisements
-      const adsResponse = await axios.get('/api/user/advertisements');
+      const adsResponse = await axios.get("/api/user/advertisements");
       setAdvertisements(adsResponse.data.advertisements);
 
-      // Fetch coupon offer
-      const offerResponse = await axios.get('/api/user/coupon-offer');
-      setCouponOffer(offerResponse.data.offer);
+      // Fetch coupon offers
+      const offersResponse = await axios.get("/api/user/coupon-offers");
+      setCouponOffers(offersResponse.data.offers);
 
-      // Fetch user's coupon if exists
-      const couponResponse = await axios.get(`/api/user/my-coupon/${user.id}`);
-      setMyCoupon(couponResponse.data.coupon);
+      // Fetch user's coupons
+      const couponsResponse = await axios.get(
+        `/api/user/my-coupons/${user.id}`
+      );
+      setMyCoupons(couponsResponse.data.coupons);
 
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
       setLoading(false);
     }
   };
 
   // Handle coupon purchase
-  const handlePurchaseCoupon = async () => {
+  const handlePurchaseCoupon = async (offerId) => {
     try {
-      const response = await axios.post('/api/user/purchase-coupon', {
+      const response = await axios.post("/api/user/purchase-coupon", {
         customerId: user.id,
-        customerName: user.name
+        customerName: user.name,
+        offerId,
       });
 
       if (response.data.success) {
-        alert('Coupon purchased successfully!');
-        setMyCoupon(response.data.coupon);
+        alert("Coupon purchased successfully!");
+        fetchData(); // Refresh data
       }
     } catch (error) {
-      alert(error.response?.data?.message || 'Failed to purchase coupon');
+      alert(error.response?.data?.message || "Failed to purchase coupon");
     }
   };
 
@@ -60,23 +63,29 @@ function UserDashboard({ user, onLogout }) {
       {/* Header */}
       <header className="dashboard-header">
         <h1>🌸 Welcome, {user.name}!</h1>
-        <button onClick={onLogout} className="logout-btn">Logout</button>
+        <button onClick={onLogout} className="logout-btn">
+          Logout
+        </button>
       </header>
+      <div className="hor-line"></div>
 
       <div className="dashboard-content">
         {/* Main Content Area */}
         <div className="main-content">
-          <h2>✨ Special Offers & Promotions</h2>
-          
+          <h2>Special Offers & Promotions</h2>
+
           {/* Advertisements Section */}
           <div className="advertisements-section">
             {advertisements.length > 0 ? (
               advertisements.map((ad) => (
                 <div key={ad._id} className="ad-card">
                   {ad.imageUrl && (
-                    <div className="ad-image" style={{
-                      background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`
-                    }}>
+                    <div
+                      className="ad-image"
+                      style={{
+                        background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`,
+                      }}
+                    >
                       <span>📸</span>
                     </div>
                   )}
@@ -92,14 +101,25 @@ function UserDashboard({ user, onLogout }) {
           </div>
         </div>
 
-        {/* Sidebar with Coupon Offer */}
+        {/* Sidebar with Coupon Offers */}
         <aside className="sidebar">
-          {couponOffer && (
-            <CouponCard 
-              offer={couponOffer} 
-              myCoupon={myCoupon}
-              onPurchase={handlePurchaseCoupon}
-            />
+          <h3>Available Offers</h3>
+          {couponOffers.length > 0 ? (
+            couponOffers.map((offer) => {
+              const myCoupon = myCoupons.find(
+                (c) => c.offerId._id === offer._id
+              );
+              return (
+                <CouponCard
+                  key={offer._id}
+                  offer={offer}
+                  myCoupon={myCoupon}
+                  onPurchase={() => handlePurchaseCoupon(offer._id)}
+                />
+              );
+            })
+          ) : (
+            <p>No offers available</p>
           )}
         </aside>
       </div>

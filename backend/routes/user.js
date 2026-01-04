@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Advertisement = require("../models/Advertisement");
 const Coupon = require("../models/Coupon");
+const CouponOffer = require("../models/CouponOffer");
 const User = require("../models/User");
 
 // Get active advertisements
@@ -17,17 +18,12 @@ router.get("/advertisements", async (req, res) => {
 });
 
 // Get coupon offer details
-router.get("/coupon-offer", async (req, res) => {
+router.get("/coupon-offers", async (req, res) => {
   try {
-    // Static offer: ₹2000 for 3 facials
-    const offer = {
-      title: "Special Facial Package",
-      description: "Get 3 premium facials for just ₹2000!",
-      price: 2000,
-      totalFacials: 3,
-      features: ["Deep cleansing", "Hydration therapy", "Anti-aging treatment"],
-    };
-    res.json({ success: true, offer });
+    const offers = await CouponOffer.find({ isActive: true }).sort({
+      createdAt: -1,
+    });
+    res.json({ success: true, offers });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -36,23 +32,30 @@ router.get("/coupon-offer", async (req, res) => {
 // Purchase coupon
 router.post("/purchase-coupon", async (req, res) => {
   try {
-    const { customerId, customerName } = req.body;
+    const { customerId, customerName, offerId } = req.body;
 
-    // Check if user already has a coupon
-    const existingCoupon = await Coupon.findOne({ customerId });
+    // Check if user already has a coupon for this offer
+    const existingCoupon = await Coupon.findOne({ customerId, offerId });
     if (existingCoupon) {
       return res
         .status(400)
-        .json({ message: "You already have an active coupon" });
+        .json({ message: "You already have an active coupon for this offer" });
+    }
+
+    // Get the offer details
+    const offer = await CouponOffer.findById(offerId);
+    if (!offer) {
+      return res.status(404).json({ message: "Offer not found" });
     }
 
     // Create new coupon
     const coupon = new Coupon({
       customerId,
       customerName,
-      totalFacials: 3,
+      offerId,
+      totalFacials: offer.totalFacials,
       facialsUsed: 0,
-      price: 2000,
+      price: offer.price,
     });
 
     await coupon.save();
@@ -67,11 +70,13 @@ router.post("/purchase-coupon", async (req, res) => {
   }
 });
 
-// Get user's coupon
-router.get("/my-coupon/:userId", async (req, res) => {
+// Get user's coupons
+router.get("/my-coupons/:userId", async (req, res) => {
   try {
-    const coupon = await Coupon.findOne({ customerId: req.params.userId });
-    res.json({ success: true, coupon });
+    const coupons = await Coupon.find({
+      customerId: req.params.userId,
+    }).populate("offerId");
+    res.json({ success: true, coupons });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

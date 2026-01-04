@@ -4,11 +4,16 @@ const mongoose = require("mongoose");
 const couponSchema = new mongoose.Schema({
   customerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "users",
     required: true,
   },
   customerName: {
     type: String,
+    required: true,
+  },
+  offerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "CouponOffer",
     required: true,
   },
   totalFacials: {
@@ -26,6 +31,10 @@ const couponSchema = new mongoose.Schema({
   purchasedAt: {
     type: Date,
     default: Date.now,
+  },
+  validUntil: {
+    type: Date,
+    default: () => new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from purchase
   },
 });
 

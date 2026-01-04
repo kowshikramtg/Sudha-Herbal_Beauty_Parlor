@@ -1,3 +1,5 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 /* Global Styles */
 * {
   margin: 0;
@@ -6,13 +8,15 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* font-family: "Roboto", Avenir, Helvetica, Arial, sans-serif; */
+  font-family: "Poppins", Arial, sans-serif;
   background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
   min-height: 100vh;
 }
 
 .App {
   min-height: 100vh;
+  min-width: 100%;
 }
 
 /* Loading */
@@ -41,6 +45,9 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 450px;
+    /* font-family: "Roboto", serif, sans-serif, Avenir, Helvetica, Arial; */
+    font-family: Arial, sans-serif;
+
 }
 
 .login-box h1 {
@@ -63,7 +70,7 @@ body {
   background: #f0f0f0;
   cursor: pointer;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   transition: all 0.3s;
 }
@@ -82,11 +89,12 @@ body {
 .login-box h2 {
   color: #333;
   margin-bottom: 15px;
-  font-size: 22px;
+  font-size: 24px;
+  align-self: center;
 }
 
 .login-box input {
-  padding: 15px;
+  padding: 12px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 16px;
@@ -147,7 +155,7 @@ body {
 
 .dashboard-header h1 {
   color: #d63384;
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .logout-btn {
@@ -203,7 +211,7 @@ body {
 }
 
 .ad-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
 }
 
 .ad-image {
@@ -324,8 +332,13 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 /* Coupon Status */
@@ -632,6 +645,15 @@ body {
 .coupons-table button.disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+
+.hor-line {
+  width: 90%;
+  height: 1px;
+  background-color: #000000;
+  margin-top: 15px;
+  margin: 30px auto;
+  opacity: 0.5;
 }
 
 /* Responsive */
