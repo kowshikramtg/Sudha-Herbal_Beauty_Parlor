@@ -1,0 +1,65 @@
+.dashboard-container{
+    margin: 0 auto;
+}
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffe4e1;
+    border-radius: 10px;
+    margin: -20px 0 -50px 0
+}
+.dashboard-header img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 10px 0 0 20px;
+}
+.headline span{
+font-family: 'Allura', cursive;
+  font-size: 9.5rem;
+    color: #ff69b4;
+}
+.headline{
+  font-family: "Poppins", Arial, sans-serif;
+  font-size: 2rem;
+    color: #ff69b4;
+    margin: -20px 0 -20px 40px
+}
+.logout-btn{
+    margin: 0 30px 0 0;
+}
+.brand-name{
+    font-family: 'Allura', cursive;
+    font-size: 3.5rem;
+    color: #ff69b4;
+    margin: -20px -20px -60px 20px ;
+}
+.dashboard-content .desc{
+    font-family: "Poppins", Arial, sans-serif;
+    font-size: 1.2rem;
+    color: #333333;
+    display: flex;
+    justify-content: center;
+    margin: 0 0 200px 0;
+}
+
+@media(max-width: 768px){
+    .dashboard-header img{
+        width: 100px;
+        height: 100px;
+        margin: 10px 0 0 10px;
+    }
+    .headline span{
+      font-size: 6.5rem;
+    }
+    .headline{
+      font-size: 1.5rem;
+      margin: -15px 0 -15px 20px
+    }
+    .brand-name{
+      font-size: 2.5rem;
+      margin: -15px -15px -40px 10px ;
+    }
+    
+}

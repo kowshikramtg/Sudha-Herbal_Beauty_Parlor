@@ -156,4 +156,31 @@ router.put("/coupons/:id/update-facial", async (req, res) => {
   }
 });
 
+// Confirm or reject coupon payment
+router.put("/confirm-coupon/:couponId", async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!['confirmed', 'rejected'].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const coupon = await Coupon.findByIdAndUpdate(
+      req.params.couponId,
+      {
+        status,
+        paymentDate: status === 'confirmed' ? new Date() : undefined
+      },
+      { new: true }
+    );
+
+    if (!coupon) {
+      return res.status(404).json({ message: "Coupon not found" });
+    }
+
+    res.json({ success: true, message: `Coupon ${status}`, coupon });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 module.exports = router;

@@ -1,39 +1,76 @@
 import React, { useState } from 'react';
 import './App.css';
+import Navbar from './components/Navbar';
+import LandingPage from './components/LandingPage';
 import Login from './components/Login';
-import UserDashboard from './components/UserDashboard';
 import ManagerDashboard from './components/ManagerDashboard';
 
-function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userRole, setUserRole] = useState(null);
+import Footer from './components/Footer';
 
-  // Handle Logout
+function App() {
+  // Load user from local storage on mount
+  const [currentUser, setCurrentUser] = useState(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+  const [userRole, setUserRole] = useState(() => {
+    const savedRole = localStorage.getItem('userRole');
+    return savedRole ? savedRole : null;
+  });
+  const [view, setView] = useState('home'); // home, login, admin-dashboard
+
   const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('userRole');
     setCurrentUser(null);
     setUserRole(null);
+    setView('home');
   };
+
+  const handleLoginSuccess = (user, role) => {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem('userRole', role);
+    setCurrentUser(user);
+    setUserRole(role);
+    if (role === 'admin') {
+      setView('admin-dashboard');
+    } else {
+      setView('home');
+    }
+  };
+
+  // Handle initial view based on URL or User
+  React.useEffect(() => {
+    const path = window.location.pathname;
+    if (path === '/login') {
+      setView('login');
+    } else if (currentUser && userRole === 'admin') {
+      // If manually refreshed on other paths but is admin
+      setView('admin-dashboard');
+    }
+  }, [currentUser, userRole]);
 
   return (
     <div className="App">
-      {!currentUser ? (
-        // Show Login Page
-        <Login 
-          setCurrentUser={setCurrentUser} 
-          setUserRole={setUserRole} 
-        />
-      ) : userRole === 'admin' ? (
-        // Show Manager Dashboard
-        <ManagerDashboard 
-          admin={currentUser} 
-          onLogout={handleLogout} 
-        />
+      {view === 'admin-dashboard' && userRole === 'admin' ? (
+        <ManagerDashboard admin={currentUser} onLogout={handleLogout} />
       ) : (
-        // Show User Dashboard
-        <UserDashboard 
-          user={currentUser} 
-          onLogout={handleLogout} 
-        />
+        <>
+          {view !== 'login' && <Navbar user={currentUser} onLogout={handleLogout} />}
+
+          {view === 'home' && (
+            <LandingPage user={currentUser} />
+          )}
+
+          {view === 'login' && (
+            <Login
+              onLoginSuccess={handleLoginSuccess}
+              onCancel={() => setView('home')}
+            />
+          )}
+
+          {view !== 'login' && view !== 'admin-dashboard' && <Footer />}
+        </>
       )}
     </div>
   );

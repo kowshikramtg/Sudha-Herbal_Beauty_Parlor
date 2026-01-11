@@ -137,7 +137,7 @@ npm start
 # App will open on http://localhost:3000
 ```
 
-## 🔑 Login Credentials
+##  Login Credentials
 
 ### Manager Login
 - **Username:** admin
@@ -149,7 +149,7 @@ npm start
 
 Or register a new user through the registration form.
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 beauty-parlour/
@@ -180,7 +180,12 @@ beauty-parlour/
 └── README.md
 ```
 
-## 🔌 API Endpoints
+
+## Probelm faced
+- Change in the database name in .env file, therefore it created another database named by it and store null values, ~> so check the database name once before using in the .env file.
+- Keep an Eye on keywords, and update in all files with the same keywords. 
+
+## API Endpoints
 
 ### Authentication
 - `POST /api/auth/user/login` - User login
@@ -272,8 +277,10 @@ Built with:
 **Happy Coding! 💖**
 
 
+***LandingPage.jsx is the maon page***
+# and there are Login.jsx, AppointmentModal.jsx, Navbarjsx, PaymentModel.jsx ~> working
 
-
-**probelm faced**
-- change in the database name in .env file, therefore it created another database named by it and store null values, ~> so check the database name once before using in the .env file.
-- 
+# to do
+# make the navbar glass effect slightly
+# make the user login extra features, like record of coupon used and active coupons.
+# make the admin page workable to manage and update the advertisements and coupons.

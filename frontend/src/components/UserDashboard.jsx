@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CouponCard from "./CouponCard.jsx";
+import "../componentCss/UserDashboard.css";
+import img from "../assets/wImg.jpeg";
 
 function UserDashboard({ user, onLogout }) {
   const [advertisements, setAdvertisements] = useState([]);
@@ -9,9 +11,7 @@ function UserDashboard({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
 
   // Fetch data on component mount
-  useEffect(() => {
-    fetchData();
-  }, []);
+
 
   const fetchData = async () => {
     try {
@@ -35,6 +35,12 @@ function UserDashboard({ user, onLogout }) {
       setLoading(false);
     }
   };
+
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Handle coupon purchase
   const handlePurchaseCoupon = async (offerId) => {
@@ -62,16 +68,19 @@ function UserDashboard({ user, onLogout }) {
     <div className="dashboard-container">
       {/* Header */}
       <header className="dashboard-header">
-        <h1>🌸 Welcome, {user.name}!</h1>
+        <img src={img} alt="logo" />
+        <h2 className="brand-name">Sudha Herbal Beauty Parlour</h2>
         <button onClick={onLogout} className="logout-btn">
           Logout
         </button>
       </header>
       <div className="hor-line"></div>
+      <h1 className="headline">🌸 Welcome,<span>{user.name[0].toUpperCase()}</span>{user.name.slice(1)}</h1>
 
       <div className="dashboard-content">
         {/* Main Content Area */}
         <div className="main-content">
+          <span className="desc">Welcome to our Beauty salon, where we believe that everyone deserves to look and feel their best. We prefer natural beauty and wellness.</span>
           <h2>Special Offers & Promotions</h2>
 
           {/* Advertisements Section */}

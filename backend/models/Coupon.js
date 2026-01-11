@@ -28,6 +28,14 @@ const couponSchema = new mongoose.Schema({
     type: Number,
     default: 2000,
   },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'rejected'],
+    default: 'confirmed'
+  },
+  paymentDate: {
+    type: Date
+  },
   purchasedAt: {
     type: Date,
     default: Date.now,

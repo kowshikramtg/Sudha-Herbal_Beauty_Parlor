@@ -69,9 +69,8 @@ function CouponCard({ offer, myCoupon, onPurchase }) {
             <div
               className="progress-fill"
               style={{
-                width: `${
-                  (myCoupon.facialsUsed / myCoupon.totalFacials) * 100
-                }%`,
+                width: `${(myCoupon.facialsUsed / myCoupon.totalFacials) * 100
+                  }%`,
               }}
             ></div>
           </div>

@@ -56,13 +56,14 @@ router.post("/purchase-coupon", async (req, res) => {
       totalFacials: offer.totalFacials,
       facialsUsed: 0,
       price: offer.price,
+      status: 'pending'
     });
 
     await coupon.save();
 
     res.json({
       success: true,
-      message: "Coupon purchased successfully",
+      message: "Coupon purchase initiated. Please complete payment.",
       coupon,
     });
   } catch (error) {
